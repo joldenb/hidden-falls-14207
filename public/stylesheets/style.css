@@ -2,18 +2,21 @@ body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   text-align: center;
-  background-color: #3366ff;
-  color: white;
+  background-image: url("/public/images/coffee_shop.jpg");
+  background-size: cover;
+  color: #000d33;
+  font-family:helvetica;
+  font-weight:100;
 }
 
 a {
-  color: #00B7FF;
+  color: #000d33;
 }
 
 body h1 {
-    font-size:45px;
+    font-size:75px;
 }
 
 body p {
-    font-size:20px;
+    font-size:45px;
 }
