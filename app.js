@@ -1,44 +1,60 @@
-// dependencies
-var fs = require('fs');
-var http = require('http');
 var express = require('express');
-var routes = require('./routes');
 var path = require('path');
-var mongoose = require('mongoose');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
-// global config
+var routes = require('./routes/index');
+var users = require('./routes/users');
+
 var app = express();
-app.set('port', process.env.PORT || 1337);
-app.set('views', __dirname + '/views');
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(app.router);
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// env config
-app.configure('development', function(){
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+app.use('/', routes);
+app.use('/users', users);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-app.configure('production', function(){
-    app.use(express.errorHandler());
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
 });
 
-// mongo config
-var MONGOLAB_URI= "add_your_mongolab_uri_here"
-var mongo = process.env.MONGOLAB_URI || 'mongodb://localhost/node-bootstrap3-template'
-mongoose.connect(mongo);
 
-// mongo model
-// var Model_Name = require('add_your_models_here');
-
-// routes
-app.get('/', routes.index);
-app.get('/ping', routes.ping);
-
-// run server
-app.listen(app.get('port'), function(){
-  console.log('\nExpress server listening on port ' + app.get('port'));
-});
+module.exports = app;
