@@ -1,9 +1,9 @@
-var path = require("path");
+var express = require('express');
+var router = express.Router();
 
-exports.index = function(req, res){
-  res.render('index', { title: "Start Bootstrap"});
-};
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
 
-exports.ping = function(req, res){
-  res.send("pong!", 200);
-};
+module.exports = router;
